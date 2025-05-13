@@ -159,6 +159,18 @@ public class Parser {
         consume("pontoevirgula"); // Consumir ";"
     }
 
+    private void novoArray() throws IOException {
+        consume("ID");
+        consume("colcheteesquerdo");
+        if (lookahead.name.equals("inteiro")) {
+            consume("inteiro");
+        } else {
+            error("Esperado: inteiro, encontrado: " + lookahead.name);
+        }
+        consume("colchetedireito");
+        consume("pontoevirgula");
+    }
+
     private void expressao() throws IOException {
         if (!symbolTable.exists(lookahead.value)) {
             error("Variável não declarada: " + lookahead.value);

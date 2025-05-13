@@ -54,6 +54,8 @@ abrePar = "("
 fechaPar = ")"
 abreChave = "{"
 fechaChave = "}"
+abreColchete = "["
+fechaColchete = "]"
 doisPontos = ":"
 STRING = \"([^\"\\]|\\.)*\"
 
@@ -90,6 +92,8 @@ brancos = [ \t\n\r]+
 {fechaPar}      { return createToken("parentesedireito", yytext()); }
 {abreChave}     { return createToken("chaveesquerda", yytext()); }
 {fechaChave}    { return createToken("chavedireita", yytext()); }
+{abreColchete}  { return createToken("colcheteesquerda", yytext()); }
+{fechaColchete} { return createToken("colchetedireito", yytext()); }
 {doisPontos}    { return createToken("doispontos", yytext()); }
 
 {ID}            { return createToken("ID", yytext()); }

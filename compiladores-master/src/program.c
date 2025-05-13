@@ -1,6 +1,7 @@
 program calculasoma;
 void main() {
     int a, b;
+    int numbers[] = {1, 2, 3, 4, 5};
 
     printf("digite o primeiro numero:");
     scanf("%d", &a);
@@ -9,4 +10,6 @@ void main() {
     scanf("%d", &b);
     
     printf("%d\n", a+b);
+
+    
 }
