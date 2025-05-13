@@ -1,6 +1,0 @@
-{
-    "java.project.referencedLibraries": [
-        "lib/**/*.jar",
-        "compiladores-master/compiladores-master/src/lib/jflex-full-1.9.1.jar"
-    ]
-}

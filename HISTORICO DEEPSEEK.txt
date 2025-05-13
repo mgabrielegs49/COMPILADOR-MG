@@ -1,0 +1,23 @@
+PS C:\Users\Maria Gabriele\Downloads\Compiladores\compiladores-master\COMPILADOR-MG> javac -cp ".;src/lib/jflex-full-1.9.1.jar" src/*.java
+PS C:\Users\Maria Gabriele\Downloads\Compiladores\compiladores-master\COMPILADOR-MG> java -Xmx512m -cp ".;src/lib/jflex-full-1.9.1.jar;src" src.CLexicalAnalyzer
+Análise sintática concluída com sucesso.
+
+Erros encontrados:
+Erro [linha 3, coluna 15]: Erro sintático: Esperado: pontoevirgula, encontrado: colcheteesquerda
+Erro [linha 3, coluna 15]: Erro sintático: Comando inválido: colcheteesquerda
+Erro [linha 3, coluna 16]: Erro sintático: Comando inválido: colchetedireito
+Erro [linha 3, coluna 18]: Erro sintático: Comando inválido: IGUAL
+Erro [linha 3, coluna 20]: Erro sintático: Comando inválido: chaveesquerda
+Erro [linha 3, coluna 21]: Erro sintático: Comando inválido: inteiro
+Erro [linha 3, coluna 22]: Erro sintático: Comando inválido: virgula
+Erro [linha 3, coluna 24]: Erro sintático: Comando inválido: inteiro
+Erro [linha 3, coluna 25]: Erro sintático: Comando inválido: virgula
+Erro [linha 3, coluna 27]: Erro sintático: Comando inválido: inteiro
+Erro [linha 3, coluna 28]: Erro sintático: Comando inválido: virgula
+Erro [linha 3, coluna 30]: Erro sintático: Comando inválido: inteiro
+Erro [linha 3, coluna 31]: Erro sintático: Comando inválido: virgula
+Erro [linha 3, coluna 33]: Erro sintático: Comando inválido: inteiro
+PS C:\Users\Maria Gabriele\Downloads\Compiladores\compiladores-master\COMPILADOR-MG> 
+
+
+

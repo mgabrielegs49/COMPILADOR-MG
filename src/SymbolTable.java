@@ -7,10 +7,14 @@ public class SymbolTable {
     private final Map<String, Symbol> table = new HashMap<>();
 
     public void declare(String name, String type) {
+        declare(name, type, false, -1);
+    }
+
+    public void declare(String name, String type, boolean isArray, int size) {
         if (table.containsKey(name)) {
             throw new RuntimeException("Erro: variável '" + name + "' já declarada.");
         }
-        table.put(name, new Symbol(name, type));
+        table.put(name, new Symbol(name, type, isArray, size));
     }
 
     public Symbol lookup(String name) {
@@ -24,7 +28,11 @@ public class SymbolTable {
     public void printTable() {
         System.out.println("Tabela de Símbolos:");
         for (Map.Entry<String, Symbol> entry : table.entrySet()) {
-            System.out.println("  " + entry.getKey() + " -> " + entry.getValue());
+            Symbol sym = entry.getValue();
+            String typeInfo = sym.isArray ? 
+                sym.type + "[" + (sym.size > 0 ? sym.size : "") + "]" : 
+                sym.type;
+            System.out.println("  " + entry.getKey() + " -> " + typeInfo);
         }
     }
 }
