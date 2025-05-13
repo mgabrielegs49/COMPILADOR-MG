@@ -1,0 +1,186 @@
+Para implementar a análise de arrays/vetores mantendo a estrutura existente, vamos fazer as seguintes modificações:
+
+1. **Atualizar a Análise Léxica (c.flex):**
+```jflex
+// Adicionar/verificar estas regras
+abreColchete = "\["
+fechaColchete = "\]"
+virgula = ","
+abreChave = "\{"
+fechaChave = "\}"
+```
+
+2. **Atualizar a Classe Symbol para suportar arrays:**
+```java
+public class Symbol {
+    public final String name;
+    public final String type;
+    public final boolean isArray;
+    public final int size;
+
+    public Symbol(String name, String type) {
+        this(name, type, false, 0);
+    }
+
+    public Symbol(String name, String type, boolean isArray, int size) {
+        this.name = name;
+        this.type = type;
+        this.isArray = isArray;
+        this.size = size;
+    }
+
+    // ... restante da classe
+}
+```
+
+3. **Modificar o Parser para lidar com arrays:**
+
+```java
+private void declaracaoVariavel() throws IOException {
+    consume("int");
+    boolean isArray = false;
+    int arraySize = -1;
+
+    if (lookahead.name.equals("ID")) {
+        String varName = lookahead.value;
+        consume("ID");
+        
+        // Verificar se é array
+        if (lookahead.name.equals("abreColchete")) {
+            isArray = true;
+            consume("abreColchete");
+            
+            if (lookahead.name.equals("inteiro")) {
+                arraySize = Integer.parseInt(lookahead.value);
+                consume("inteiro");
+            }
+            
+            consume("fechaColchete");
+        }
+
+        // Verificar declaração duplicada
+        if (symbolTable.exists(varName)) {
+            error("Variável já declarada: " + varName);
+        }
+        
+        // Registrar na tabela de símbolos
+        if (isArray) {
+            symbolTable.declare(varName, "int[]", true, arraySize);
+        } else {
+            symbolTable.declare(varName, "int");
+        }
+
+        // Tratar inicialização
+        if (lookahead.name.equals("IGUAL")) {
+            consume("IGUAL");
+            inicializacaoArray(varName);
+        }
+    }
+
+    // ... restante do método
+}
+
+private void inicializacaoArray(String arrayName) throws IOException {
+    consume("abreChave");
+    List<Integer> values = new ArrayList<>();
+    
+    if (lookahead.name.equals("inteiro")) {
+        values.add(Integer.parseInt(lookahead.value));
+        consume("inteiro");
+        
+        while (lookahead.name.equals("virgula")) {
+            consume("virgula");
+            if (lookahead.name.equals("inteiro")) {
+                values.add(Integer.parseInt(lookahead.value));
+                consume("inteiro");
+            }
+        }
+    }
+    
+    consume("fechaChave");
+    consume("pontoevirgula");
+    
+    // Verificar tamanho se foi declarado
+    Symbol sym = symbolTable.lookup(arrayName);
+    if (sym.size > 0 && values.size() != sym.size) {
+        error("Tamanho do array não coincide com a declaração");
+    }
+}
+```
+
+4. **Adicionar suporte a acesso de arrays nas expressões:**
+```java
+private void fator() throws IOException {
+    switch (lookahead.name) {
+        case "ID":
+            String varName = lookahead.value;
+            consume("ID");
+            
+            // Verificar se é acesso a array
+            if (lookahead.name.equals("abreColchete")) {
+                consume("abreColchete");
+                expr(); // Índice
+                
+                // Verificar se o índice é numérico
+                if (!symbolTable.exists(varName)) {
+                    error("Array não declarado: " + varName);
+                } else {
+                    Symbol sym = symbolTable.lookup(varName);
+                    if (!sym.isArray) {
+                        error("Variável não é um array: " + varName);
+                    }
+                }
+                
+                consume("fechaColchete");
+            }
+            break;
+        // ... casos anteriores
+    }
+}
+```
+
+5. **Atualizar a SymbolTable:**
+```java
+public class SymbolTable {
+    private final Map<String, Symbol> table = new HashMap<>();
+
+    public void declare(String name, String type) {
+        declare(name, type, false, 0);
+    }
+
+    public void declare(String name, String type, boolean isArray, int size) {
+        if (table.containsKey(name)) {
+            throw new RuntimeException("Erro: variável '" + name + "' já declarada.");
+        }
+        table.put(name, new Symbol(name, type, isArray, size));
+    }
+    
+    // ... restante da classe
+}
+```
+
+6. **Exemplo de uso no código fonte:**
+```c
+program arraytest;
+void main() {
+    int vetor[5];
+    int valores[] = {10, 20, 30, 40, 50};
+    
+    vetor[0] = 100;
+    printf("%d", valores[2]);
+}
+```
+
+**Principais verificações adicionadas:**
+- Declaração de arrays com tamanho fixo ou inferido
+- Inicialização de arrays com valores
+- Verificação de limites na inicialização
+- Acesso a elementos com verificação de tipo
+- Detecção de uso de variáveis como arrays
+- Prevenção de acesso a índices não inteiros
+
+**Para melhorar ainda mais:**
+1. Adicione suporte a arrays multidimensionais
+2. Implemente verificação de limites de acesso
+3. Adicione tratamento de strings como arrays de caracteres
+4. Melhore as mensagens de erro para casos específicos de arrays
