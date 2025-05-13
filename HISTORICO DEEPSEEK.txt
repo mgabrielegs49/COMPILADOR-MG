@@ -20,4 +20,4 @@ Erro [linha 3, coluna 33]: Erro sintático: Comando inválido: inteiro
 PS C:\Users\Maria Gabriele\Downloads\Compiladores\compiladores-master\COMPILADOR-MG> 
 
 
-
+falta corrigir a o erro da linha 3
